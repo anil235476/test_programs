@@ -72,6 +72,7 @@ namespace alex {
 		});	
 	}
 	
+	/*
 	struct random_access;
 
 	template<typename I, typename T> //I models random access iterator
@@ -79,6 +80,7 @@ namespace alex {
 		partition(I first, I last, T const& v, random_access) {
 
 	}
+	*/
 
 	template<typename I, typename P> // I models forward iterator
 	I partition_forward(I first, I last, P pred) {

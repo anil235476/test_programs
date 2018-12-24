@@ -4,7 +4,34 @@
 
 namespace alex {
 
+	namespace util {
+		template<typename I>
+		I successor(I i) {
+			return ++i;
+		}
+	}
+
 	namespace detail {
+
+		template<typename I, //I models bidirectional iterator
+				typename P //P models uniary iterator
+		>
+		I
+			partition_bidirectional_unguarded(I first, I last, P pred) {
+			//assert(!std::all_of(first, last, pred));
+			//assert(!std::none_of(first, last, pred));
+
+			while (true) {
+				while (pred(*first)) ++first;
+				do --last; while (!pred(*last));
+				if (last == first) return first;
+				std::iter_swap(first, last);
+				++first;
+			}
+		}
+
+
+
 		template<typename I, class P>
 		I 
 			partition_bidirectional(I first, I last, P pred) {
@@ -22,10 +49,7 @@ namespace alex {
 			}
 		}
 
-		template<typename I>
-		I successor(I i) {
-			return ++i;
-		}
+		
 
 		template<typename I, class P>
 		I
@@ -33,7 +57,7 @@ namespace alex {
 			while (true) {
 				if (first == last) return first;
 				--last;
-				if (pred(*last)) return detail::successor(last);
+				if (pred(*last)) return util::successor(last);
 			}
 		}
 
@@ -93,6 +117,19 @@ namespace alex {
 			++first;
 		}
 		return m;
+	}
+
+	template<typename I, //I models bidirectional iterator
+		typename P	//P models uniary op
+	> 
+		I partition_bidirectional_optimized(I first, I last, P p) {
+		while (true) {
+			while (p(*first)) ++first;
+			do --last; while (!p(*last));
+			if (util::successor(last) == first) return first;
+			std::iter_swap(first, last);
+			++first;
+		}
 	}
 
 }//namespace alex
